@@ -26,7 +26,7 @@ Tab2 <- tabPanel("2017",
                      choices = c("Scotland", constituencies)
                    )
                  ),
-                 mainPanel(girafeOutput("scotland_map2017"))))
+                 mainPanel(girafeOutput("scotland_map2017"), tableOutput("table17"))))
 Tab3 <- tabPanel("2015",
                  sidebarLayout(sidebarPanel(
                    selectInput(
@@ -36,4 +36,4 @@ Tab3 <- tabPanel("2015",
                      choices = c("Scotland", constituencies)
                    )
                  ),
-                 mainPanel(girafeOutput("scotland_map2015"))))
+                 mainPanel(girafeOutput("scotland_map2015"), tableOutput("table15"))))

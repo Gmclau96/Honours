@@ -38,7 +38,7 @@ myserver <- function(input, output, session) {
     sheet = 3
   )
   #drop unnecessary columns
-  Constituencies_tidy <- Constituencies_tidy[,-c(3:5, 7, 9:22)]
+  Constituencies_tidy <- Constituencies_tidy[, -c(3:5, 7, 9:22)]
   
   #combine dataframes
   Constituencies_tidy19 <-
@@ -132,8 +132,26 @@ myserver <- function(input, output, session) {
     }
   })
   
-  
-  election19_tidy <- election_stats19[,-c(1:2, 4:8, 11,13, 19:32)]
+  #create new dataframe with key election info for viewing & make reactive
+  election15_tidy <- election_stats15[, -c(1:2, 4:8, 11, 13, 19:32)]
+  tableConst15 <- reactive({
+    if (input$fifteen == "Scotland") {
+      election15_tidy
+    } else {
+      election15_tidy <-
+        filter(election15_tidy, constituency_name == input$fifteen)
+    }
+  })
+  election17_tidy <- election_stats17[, -c(1:2, 4:8, 11, 13, 19:32)]
+  tableConst17 <- reactive({
+    if (input$seventeen == "Scotland") {
+      election17_tidy
+    } else {
+      election17_tidy <-
+        filter(election17_tidy, constituency_name == input$seventeen)
+    }
+  })
+  election19_tidy <- election_stats19[, -c(1:2, 4:8, 11, 13, 19:32)]
   tableConst19 <- reactive({
     if (input$nineteen == "Scotland") {
       election19_tidy
@@ -144,6 +162,8 @@ myserver <- function(input, output, session) {
   })
   
   #output information table below plot
+  output$table15 <- renderTable(tableConst15())
+  output$table17 <- renderTable(tableConst17())
   output$table19 <- renderTable(tableConst19())
   
   #plot map
