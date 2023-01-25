@@ -38,7 +38,7 @@ myserver <- function(input, output, session) {
     sheet = 3
   )
   #drop unnecessary columns
-  Constituencies_tidy <- Constituencies_tidy[, -c(3:5, 7, 9:22)]
+  Constituencies_tidy <- Constituencies_tidy[,-c(3:5, 7, 9:22)]
   
   #combine dataframes
   Constituencies_tidy19 <-
@@ -132,6 +132,19 @@ myserver <- function(input, output, session) {
     }
   })
   
+  
+  election19_tidy <- election_stats19[,-c(1:2, 4:8, 11,13, 19:32)]
+  tableConst19 <- reactive({
+    if (input$nineteen == "Scotland") {
+      election19_tidy
+    } else {
+      election19_tidy <-
+        filter(election19_tidy, constituency_name == input$nineteen)
+    }
+  })
+  
+  #output information table below plot
+  output$table19 <- renderTable(tableConst19())
   
   #plot map
   output$scotland_map2019 <- renderGirafe({

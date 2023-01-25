@@ -14,9 +14,9 @@ Tab1 <-   tabPanel("2019",
                        label = "Choose a constituency",
                        selected = "Scotland",
                        choices = c("Scotland", constituencies)
-                     )
+                     ), plotOutput("selected2019")
                    ),
-                   mainPanel(girafeOutput("scotland_map2019"))))
+                   mainPanel(girafeOutput("scotland_map2019"), tableOutput("table19"))))
 Tab2 <- tabPanel("2017",
                  sidebarLayout(sidebarPanel(
                    selectInput(
