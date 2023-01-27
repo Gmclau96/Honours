@@ -38,7 +38,7 @@ myserver <- function(input, output, session) {
   )
   
   #drop unnecessary columns
-  Constituencies_tidy <- Constituencies_tidy[,-c(3:5, 7, 9:22)]
+  Constituencies_tidy <- Constituencies_tidy[, -c(3:5, 7, 9:22)]
   
   #combine dataframes
   Constituencies_tidy19 <-
@@ -134,11 +134,11 @@ myserver <- function(input, output, session) {
   })
   
   #create new dataframe with key election info for viewing & make reactive
-  election15_tidy <- election_stats15[,-c(1:2, 4:8, 11, 13, 19:32)]
+  election15_tidy <- election_stats15[, -c(1:2, 4:8, 11, 13, 19:32)]
   election15_tidy <- election15_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election15_tidy <- election15_tidy [,-c(2:3)]
+  election15_tidy <- election15_tidy [, -c(2:3, 10)]
   election15_tidy <-
     election15_tidy %>% relocate(MP, .before = result)
   election15_tidy <- election15_tidy %>% rename(
@@ -150,19 +150,12 @@ myserver <- function(input, output, session) {
     "Invalid Votes" = "invalid_votes",
     "Majority" = "majority"
   )
-  tableConst15 <- reactive({
-    if (input$fifteen == "Scotland") {
-      election15_tidy
-    } else {
-      election15_tidy <-
-        filter(election15_tidy, constituency_name == input$fifteen)
-    }
-  })
-  election17_tidy <- election_stats17[,-c(1:2, 4:8, 11, 13, 19:32)]
+  
+  election17_tidy <- election_stats17[, -c(1:2, 4:8, 11, 13, 19:32)]
   election17_tidy <- election17_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election17_tidy <- election17_tidy [,-c(2:3)]
+  election17_tidy <- election17_tidy [, -c(2:3, 10)]
   election17_tidy <-
     election17_tidy %>% relocate(MP, .before = result)
   election17_tidy <- election17_tidy %>% rename(
@@ -174,19 +167,12 @@ myserver <- function(input, output, session) {
     "Invalid Votes" = "invalid_votes",
     "Majority" = "majority"
   )
-  tableConst17 <- reactive({
-    if (input$seventeen == "Scotland") {
-      election17_tidy
-    } else {
-      election17_tidy <-
-        filter(election17_tidy, constituency_name == input$seventeen)
-    }
-  })
-  election19_tidy <- election_stats19[,-c(1:2, 4:8, 11, 13, 19:32)]
+  
+  election19_tidy <- election_stats19[, -c(1:2, 4:8, 11, 13, 19:32)]
   election19_tidy <- election19_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election19_tidy <- election19_tidy [,-c(2:3)]
+  election19_tidy <- election19_tidy [, -c(2:3, 10)]
   election19_tidy <-
     election19_tidy %>% relocate(MP, .before = result)
   election19_tidy <- election19_tidy %>% rename(
@@ -289,7 +275,7 @@ myserver <- function(input, output, session) {
       theme_void()
     ggiraph(code = print(gg))
   })
-  
+  #plots for selected constituency
   output$selected2015 <- renderPlot({
     gg <-
       ggplot(Constituencies_tidy15, aes(x = long, y = lat , group = group)) +
@@ -349,5 +335,4 @@ myserver <- function(input, output, session) {
       theme(legend.position = "none")
     gg
   })
-  
 }
