@@ -8,13 +8,13 @@
 #
 
 library(shiny)
-library(readxl)
 library(rgdal)
 library(broom)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(ggiraph)
+library(googlesheets4)
 
 source('myUI.R', local = TRUE)
 source('myServer.R')

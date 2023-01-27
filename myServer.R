@@ -23,22 +23,22 @@ myserver <- function(input, output, session) {
   #rename column name to constituancy_name
   Constituencies_tidy <- Constituencies_tidy %>%
     rename(constituency_name = NAME)
-  
   #read electoral data to dataframe
-  election_stats15 <- read_excel(
-    "/Users/gordonmclaughlin/Library/CloudStorage/OneDrive-GLASGOWCALEDONIANUNIVERSITY/uni/4th year/Honours/election Csv/Honors master csv.xlsx",
+  election_stats15 <- read_sheet(
+    "https://docs.google.com/spreadsheets/d/1XayqjKFVilKgFuSW23LqtNN7Kv3Uexpvzwx2CVKz6Bc/edit#gid=0",
     sheet = 1
   )
-  election_stats17 <- read_excel(
-    "/Users/gordonmclaughlin/Library/CloudStorage/OneDrive-GLASGOWCALEDONIANUNIVERSITY/uni/4th year/Honours/election Csv/Honors master csv.xlsx",
+  election_stats17 <- read_sheet(
+    "https://docs.google.com/spreadsheets/d/1XayqjKFVilKgFuSW23LqtNN7Kv3Uexpvzwx2CVKz6Bc/edit#gid=1279722934",
     sheet = 2
   )
-  election_stats19 <- read_excel(
-    "/Users/gordonmclaughlin/Library/CloudStorage/OneDrive-GLASGOWCALEDONIANUNIVERSITY/uni/4th year/Honours/election Csv/Honors master csv.xlsx",
+  election_stats19 <- read_sheet(
+    "https://docs.google.com/spreadsheets/d/1XayqjKFVilKgFuSW23LqtNN7Kv3Uexpvzwx2CVKz6Bc/edit#gid=1542284684",
     sheet = 3
   )
+  
   #drop unnecessary columns
-  Constituencies_tidy <- Constituencies_tidy[, -c(3:5, 7, 9:22)]
+  Constituencies_tidy <- Constituencies_tidy[,-c(3:5, 7, 9:22)]
   
   #combine dataframes
   Constituencies_tidy19 <-
@@ -66,7 +66,6 @@ myserver <- function(input, output, session) {
     gsub(' .*', '', Constituencies_tidy17$result)
   Constituencies_tidy15$result <-
     gsub(' .*', '', Constituencies_tidy15$result)
-  
   #add constituency info column and remove unrequired columns (first and surnames)
   Constituencies_tidy19 <- Constituencies_tidy19 %>%
     mutate(
@@ -124,6 +123,7 @@ myserver <- function(input, output, session) {
              constituency_name == input$seventeen)
     }
   })
+  
   filterConst15 <- reactive({
     if (input$fifteen == "Scotland") {
       filter(Constituencies_tidy15, country_name == 'Scotland')
@@ -134,11 +134,11 @@ myserver <- function(input, output, session) {
   })
   
   #create new dataframe with key election info for viewing & make reactive
-  election15_tidy <- election_stats15[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election15_tidy <- election_stats15[,-c(1:2, 4:8, 11, 13, 19:32)]
   election15_tidy <- election15_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election15_tidy <- election15_tidy [, -c(2:3)]
+  election15_tidy <- election15_tidy [,-c(2:3)]
   election15_tidy <-
     election15_tidy %>% relocate(MP, .before = result)
   election15_tidy <- election15_tidy %>% rename(
@@ -158,11 +158,11 @@ myserver <- function(input, output, session) {
         filter(election15_tidy, constituency_name == input$fifteen)
     }
   })
-  election17_tidy <- election_stats17[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election17_tidy <- election_stats17[,-c(1:2, 4:8, 11, 13, 19:32)]
   election17_tidy <- election17_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election17_tidy <- election17_tidy [, -c(2:3)]
+  election17_tidy <- election17_tidy [,-c(2:3)]
   election17_tidy <-
     election17_tidy %>% relocate(MP, .before = result)
   election17_tidy <- election17_tidy %>% rename(
@@ -182,11 +182,11 @@ myserver <- function(input, output, session) {
         filter(election17_tidy, constituency_name == input$seventeen)
     }
   })
-  election19_tidy <- election_stats19[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election19_tidy <- election_stats19[,-c(1:2, 4:8, 11, 13, 19:32)]
   election19_tidy <- election19_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election19_tidy <- election19_tidy [, -c(2:3)]
+  election19_tidy <- election19_tidy [,-c(2:3)]
   election19_tidy <-
     election19_tidy %>% relocate(MP, .before = result)
   election19_tidy <- election19_tidy %>% rename(
@@ -289,4 +289,65 @@ myserver <- function(input, output, session) {
       theme_void()
     ggiraph(code = print(gg))
   })
+  
+  output$selected2015 <- renderPlot({
+    gg <-
+      ggplot(Constituencies_tidy15, aes(x = long, y = lat , group = group)) +
+      geom_polygon_interactive(aes(
+        fill = ifelse(
+          constituency_name == input$fifteen,
+          constituency_name,
+          "white"
+        )
+      ),
+      color = "black",
+      size = 0.01) +
+      scale_fill_manual(values = c("magenta", "white"))  +
+      coord_equal() +
+      labs(title = "Selected Constituency") +
+      theme_void() +
+      theme(legend.position = "none")
+    gg
+  })
+  
+  output$selected2017 <- renderPlot({
+    gg <-
+      ggplot(Constituencies_tidy17, aes(x = long, y = lat , group = group)) +
+      geom_polygon_interactive(aes(
+        fill = ifelse(
+          constituency_name == input$seventeen,
+          constituency_name,
+          "white"
+        )
+      ),
+      color = "black",
+      size = 0.01) +
+      scale_fill_manual(values = c("magenta", "white"))  +
+      coord_equal() +
+      labs(title = "Selected Constituency") +
+      theme_void() +
+      theme(legend.position = "none")
+    gg
+  })
+  
+  output$selected2019 <- renderPlot({
+    gg <-
+      ggplot(Constituencies_tidy19, aes(x = long, y = lat , group = group)) +
+      geom_polygon_interactive(aes(
+        fill = ifelse(
+          constituency_name == input$nineteen,
+          constituency_name,
+          "white"
+        )
+      ),
+      color = "black",
+      size = 0.01) +
+      scale_fill_manual(values = c("magenta", "white"))  +
+      coord_equal() +
+      labs(title = "Selected Constituency") +
+      theme_void() +
+      theme(legend.position = "none")
+    gg
+  })
+  
 }

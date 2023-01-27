@@ -1,7 +1,6 @@
 constituencies <- c(
-  read_excel(
-    "/Users/gordonmclaughlin/Library/CloudStorage/OneDrive-GLASGOWCALEDONIANUNIVERSITY/uni/4th year/Honours/election Csv/Honors master csv.xlsx",
-    sheet = 3,
+  read_sheet(
+    "https://docs.google.com/spreadsheets/d/1XayqjKFVilKgFuSW23LqtNN7Kv3Uexpvzwx2CVKz6Bc/edit#gid=0",
     range = "C2:C60",
     col_names = FALSE
   )
@@ -24,7 +23,7 @@ Tab2 <- tabPanel("2017",
                      label = "Choose a constituency",
                      selected = "Scotland",
                      choices = c("Scotland", constituencies)
-                   )
+                   ), plotOutput("selected2017")
                  ),
                  mainPanel(girafeOutput("scotland_map2017"), tableOutput("table17"))))
 Tab3 <- tabPanel("2015",
@@ -34,6 +33,6 @@ Tab3 <- tabPanel("2015",
                      label = "Choose a constituency",
                      selected = "Scotland",
                      choices = c("Scotland", constituencies)
-                   )
+                   ), plotOutput("selected2015")
                  ),
                  mainPanel(girafeOutput("scotland_map2015"), tableOutput("table15"))))
