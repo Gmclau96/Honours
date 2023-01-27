@@ -107,6 +107,7 @@ myserver <- function(input, output, session) {
         result
       )
     )
+  #filter reactive variables
   filterConst19 <- reactive({
     if (input$nineteen == "Scotland") {
       filter(Constituencies_tidy19, country_name == 'Scotland')
@@ -134,6 +135,21 @@ myserver <- function(input, output, session) {
   
   #create new dataframe with key election info for viewing & make reactive
   election15_tidy <- election_stats15[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election15_tidy <- election15_tidy %>%
+    mutate(MP = paste(mp_firstname,
+                      mp_surname))
+  election15_tidy <- election15_tidy [, -c(2:3)]
+  election15_tidy <-
+    election15_tidy %>% relocate(MP, .before = result)
+  election15_tidy <- election15_tidy %>% rename(
+    "Constituency" = "constituency_name",
+    "Result" = "result",
+    "Second Party" = "second_party",
+    "Electorate" = "electorate",
+    "Valid Votes" = "valid_votes",
+    "Invalid Votes" = "invalid_votes",
+    "Majority" = "majority"
+  )
   tableConst15 <- reactive({
     if (input$fifteen == "Scotland") {
       election15_tidy
@@ -143,6 +159,21 @@ myserver <- function(input, output, session) {
     }
   })
   election17_tidy <- election_stats17[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election17_tidy <- election17_tidy %>%
+    mutate(MP = paste(mp_firstname,
+                      mp_surname))
+  election17_tidy <- election17_tidy [, -c(2:3)]
+  election17_tidy <-
+    election17_tidy %>% relocate(MP, .before = result)
+  election17_tidy <- election17_tidy %>% rename(
+    "Constituency" = "constituency_name",
+    "Result" = "result",
+    "Second Party" = "second_party",
+    "Electorate" = "electorate",
+    "Valid Votes" = "valid_votes",
+    "Invalid Votes" = "invalid_votes",
+    "Majority" = "majority"
+  )
   tableConst17 <- reactive({
     if (input$seventeen == "Scotland") {
       election17_tidy
@@ -152,12 +183,43 @@ myserver <- function(input, output, session) {
     }
   })
   election19_tidy <- election_stats19[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election19_tidy <- election19_tidy %>%
+    mutate(MP = paste(mp_firstname,
+                      mp_surname))
+  election19_tidy <- election19_tidy [, -c(2:3)]
+  election19_tidy <-
+    election19_tidy %>% relocate(MP, .before = result)
+  election19_tidy <- election19_tidy %>% rename(
+    "Constituency" = "constituency_name",
+    "Result" = "result",
+    "Second Party" = "second_party",
+    "Electorate" = "electorate",
+    "Valid Votes" = "valid_votes",
+    "Invalid Votes" = "invalid_votes",
+    "Majority" = "majority"
+  )
+  tableConst15 <- reactive({
+    if (input$fifteen == "Scotland") {
+      election15_tidy
+    } else {
+      election15_tidy <-
+        filter(election15_tidy, Constituency == input$fifteen)
+    }
+  })
+  tableConst17 <- reactive({
+    if (input$seventeen == "Scotland") {
+      election17_tidy
+    } else {
+      election17_tidy <-
+        filter(election17_tidy, Constituency == input$seventeen)
+    }
+  })
   tableConst19 <- reactive({
     if (input$nineteen == "Scotland") {
       election19_tidy
     } else {
       election19_tidy <-
-        filter(election19_tidy, constituency_name == input$nineteen)
+        filter(election19_tidy, Constituency == input$nineteen)
     }
   })
   
