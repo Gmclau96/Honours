@@ -1,7 +1,7 @@
 myserver <- function(input, output, session) {
   #read shapefiles
   Constituencies <-
-    readOGR(dsn = "/Users/gordonmclaughlin/Library/CloudStorage/OneDrive-GLASGOWCALEDONIANUNIVERSITY/uni/4th year/Honours/shapefiles/New folder",
+    readOGR(dsn = "New folder",
             layer = "westminster_const_region")
   
   #tidy shapeframe to dataframe
@@ -59,13 +59,6 @@ myserver <- function(input, output, session) {
     subset(Constituencies_tidy15,
            country_name == 'Scotland')
   
-  #remove suffixes from result
-  Constituencies_tidy19$result <-
-    gsub(' .*', '', Constituencies_tidy19$result)
-  Constituencies_tidy17$result <-
-    gsub(' .*', '', Constituencies_tidy17$result)
-  Constituencies_tidy15$result <-
-    gsub(' .*', '', Constituencies_tidy15$result)
   #add constituency info column and remove unrequired columns (first and surnames)
   Constituencies_tidy19 <- Constituencies_tidy19 %>%
     mutate(
@@ -134,16 +127,17 @@ myserver <- function(input, output, session) {
   })
   
   #create new dataframe with key election info for viewing & make reactive
-  election15_tidy <- election_stats15[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election15_tidy <- election_stats15[,-c(1:2, 4:8, 11, 19:32)]
   election15_tidy <- election15_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election15_tidy <- election15_tidy [, -c(2:3, 10)]
+  election15_tidy <- election15_tidy [,-c(2:3, 11)]
   election15_tidy <-
     election15_tidy %>% relocate(MP, .before = result)
   election15_tidy <- election15_tidy %>% rename(
     "Constituency" = "constituency_name",
     "Result" = "result",
+    "First Party" = "first_party",
     "Second Party" = "second_party",
     "Electorate" = "electorate",
     "Valid Votes" = "valid_votes",
@@ -151,16 +145,17 @@ myserver <- function(input, output, session) {
     "Majority" = "majority"
   )
   
-  election17_tidy <- election_stats17[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election17_tidy <- election_stats17[,-c(1:2, 4:8, 11, 19:32)]
   election17_tidy <- election17_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election17_tidy <- election17_tidy [, -c(2:3, 10)]
+  election17_tidy <- election17_tidy [,-c(2:3, 11)]
   election17_tidy <-
     election17_tidy %>% relocate(MP, .before = result)
   election17_tidy <- election17_tidy %>% rename(
     "Constituency" = "constituency_name",
     "Result" = "result",
+    "First Party" = "first_party",
     "Second Party" = "second_party",
     "Electorate" = "electorate",
     "Valid Votes" = "valid_votes",
@@ -168,16 +163,17 @@ myserver <- function(input, output, session) {
     "Majority" = "majority"
   )
   
-  election19_tidy <- election_stats19[, -c(1:2, 4:8, 11, 13, 19:32)]
+  election19_tidy <- election_stats19[,-c(1:2, 4:8, 11, 19:32)]
   election19_tidy <- election19_tidy %>%
     mutate(MP = paste(mp_firstname,
                       mp_surname))
-  election19_tidy <- election19_tidy [, -c(2:3, 10)]
+  election19_tidy <- election19_tidy [,-c(2:3, 11)]
   election19_tidy <-
     election19_tidy %>% relocate(MP, .before = result)
   election19_tidy <- election19_tidy %>% rename(
     "Constituency" = "constituency_name",
     "Result" = "result",
+    "First Party" = "first_party",
     "Second Party" = "second_party",
     "Electorate" = "electorate",
     "Valid Votes" = "valid_votes",
@@ -219,19 +215,22 @@ myserver <- function(input, output, session) {
     gg <-
       ggplot(filterConst19(), aes(x = long, y = lat , group = group)) +
       geom_polygon_interactive(
-        aes(fill = result, tooltip = constituency_info),
+        aes(fill = first_party, tooltip = constituency_info),
         color = "black",
         size = 0.1
       ) +
-      scale_fill_manual(values = c(
-        "Con" = "deepskyblue",
-        "Lab" = "red",
-        "LD" = "orange",
-        "SNP" = "yellow"
-      )) +
+      scale_fill_manual(
+        values = c(
+          "Conservative" = "deepskyblue",
+          "Labour" = "red",
+          "Liberal Democrat" = "orange",
+          "SNP" = "yellow"
+        )
+      ) +
       coord_equal() +
       labs(title = "2019 General election results in Scotland",
-           caption = "Data from the House of Commons Library") +
+           caption = "Data from the House of Commons Library",
+           fill = "Result") +
       theme_void()
     ggiraph(code = print(gg))
   })
@@ -239,19 +238,22 @@ myserver <- function(input, output, session) {
     gg <-
       ggplot(filterConst17(), aes(x = long, y = lat , group = group)) +
       geom_polygon_interactive(
-        aes(fill = result, tooltip = constituency_info),
+        aes(fill = first_party, tooltip = constituency_info),
         color = "black",
         size = 0.1
       ) +
-      scale_fill_manual(values = c(
-        "Con" = "deepskyblue",
-        "Lab" = "red",
-        "LD" = "orange",
-        "SNP" = "yellow"
-      )) +
+      scale_fill_manual(
+        values = c(
+          "Conservative" = "deepskyblue",
+          "Labour" = "red",
+          "Liberal Democrat" = "orange",
+          "SNP" = "yellow"
+        )
+      ) +
       coord_equal() +
       labs(title = "2017 General election results in Scotland",
-           caption = "Data from the House of Commons Library") +
+           caption = "Data from the House of Commons Library",
+           fill = "Result") +
       theme_void()
     ggiraph(code = print(gg))
   })
@@ -259,19 +261,22 @@ myserver <- function(input, output, session) {
     gg <-
       ggplot(filterConst15(), aes(x = long, y = lat , group = group)) +
       geom_polygon_interactive(
-        aes(fill = result, tooltip = constituency_info),
+        aes(fill = first_party, tooltip = constituency_info),
         color = "black",
         size = 0.1
       ) +
-      scale_fill_manual(values = c(
-        "Con" = "deepskyblue",
-        "Lab" = "red",
-        "LD" = "orange",
-        "SNP" = "yellow"
-      )) +
+      scale_fill_manual(
+        values = c(
+          "Conservative" = "deepskyblue",
+          "Labour" = "red",
+          "Liberal Democrat" = "orange",
+          "SNP" = "yellow"
+        )
+      ) +
       coord_equal() +
       labs(title = "2015 General election results in Scotland",
-           caption = "Data from the House of Commons Library") +
+           caption = "Data from the House of Commons Library",
+           fill = "Result") +
       theme_void()
     ggiraph(code = print(gg))
   })

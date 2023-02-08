@@ -16,9 +16,13 @@ library(tidyr)
 library(ggiraph)
 library(googlesheets4)
 
-source('myUI.R', local = TRUE)
-source('myServer.R')
+#gs4_auth(cache = ".secrets")
+gs4_auth(cache = ".secrets",
+         email = TRUE,
+         use_oob = TRUE)
 
+source('myUI.R')
+source('myServer.R')
 
 shinyApp(ui = myUI,
          server = myserver)
