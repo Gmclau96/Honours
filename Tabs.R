@@ -17,6 +17,23 @@ Tab1 <-
       (
         "There are three different general elections that you can choose to view, 2019, 2017 and 2015 which are all viewable from the respective links at the top of the page. From there you are shown a map of Scotland, colour coded by what each constituency voted for. You can hover your mouse, or tap on your screen on a constituency to reveal more information. Below this map is a table of election data. The side menu on the left of your screen gives you the option to view each scottish constituency individually for each election. Clicking this will change the map below to highlight what constituency you have chosen from the menu. This will also change the main map and table to show that one constituency. This can be changed back at anytime by selecting Scotland from the menu. Information may take a moment to load, so please be patient while the website fetches the information."
       ),
+      h2("Data usage"),
+      (
+        "Official election results are used for this application under the Open Parliemant licence found at "
+      ),
+      a(
+        href = "https://www.parliament.uk/site-information/copyright-parliament/open-parliament-licence/",
+        "https://www.parliament.uk/site-information/copyright-parliament/open-parliament-licence/",
+        target = "_blank"
+      ),
+      (
+        "Constituency boundries for this application have been used under the Open Govermenemt licence "
+      ),
+      a(
+        href = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        target = "_blank"
+      ),
       h2("Register to vote"),
       ("If you have not done so already, you can register to vote at"),
       a(
